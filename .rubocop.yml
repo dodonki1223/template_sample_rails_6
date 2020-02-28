@@ -1,0 +1,64 @@
+inherit_from: .rubocop_todo.yml
+
+require: rubocop-rails
+
+Rails:
+  Enabled: true
+
+AllCops:
+  TargetRubyVersion: 2.6.5
+  Exclude:
+    - bin/bundle
+    - bin/rails
+    - bin/rake
+    - bin/setup
+    - bin/spring
+    - bin/webpack
+    - bin/webpack-dev-server
+    - bin/yarn
+    - config/boot.rb
+    - config/spring.rb
+    - config/puma.rb
+    - config/environment.rb
+    - config/environments/development.rb
+    - config/environments/production.rb
+    - config/environments/test.rb
+    - config/initializers/wrap_parameters.rb
+    - 'db/schema.rb'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - config.ru
+    - Gemfile
+    - Rakefile
+
+# https://rubocop.readthedocs.io/en/latest/cops_style/#styleclassandmodulechildren
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/channels/application_cable/connection_test.rb'
+    - 'test/test_helper.rb'
+
+# https://rubocop.readthedocs.io/en/latest/cops_style/#styledocumentation
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'app/helpers/application_helper.rb'
+    - 'app/mailers/application_mailer.rb'
+    - 'app/models/application_record.rb'
+    - 'config/application.rb'
+
+# https://rubocop.readthedocs.io/en/latest/cops_style/#stylestringliterals
+Style/StringLiterals:
+  Exclude:
+    - 'test/application_system_test_case.rb'
+    - 'test/channels/application_cable/connection_test.rb'
+
+# https://rubocop.readthedocs.io/en/latest/cops_layout/#layoutlinelength
+Layout/LineLength:
+  Max: 120
+
+# https://rubocop.readthedocs.io/en/latest/cops_style/#stylefrozenstringliteralcomment
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - config/initializers/assets.rb
+    - config/initializers/**/*
