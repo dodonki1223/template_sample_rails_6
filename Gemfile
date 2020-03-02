@@ -33,11 +33,13 @@ gem 'bootsnap', '>= 1.4.2', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # Linter tool
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
-  gem 'rspec-rails', '~> 3.9.0'
   gem 'rubocop-rspec', require: false
   gem "rails_best_practices", require: false
+  # Test tool
+  gem 'rspec-rails', '~> 3.9.0'
 end
 
 group :development do
