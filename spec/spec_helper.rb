@@ -17,12 +17,17 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'vcr'
+require 'simplecov'
 
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
   # vcrブロック外のHTTP通信は許可する(これをtrueにしないとvcr外でHTTP通信を行なうと「UnhandledHTTPRequestError」が発生してしまう)
   c.allow_http_connections_when_no_cassette = true
+end
+
+SimpleCov.start do
+  add_filter '/spec/'
 end
 
 RSpec.configure do |config|

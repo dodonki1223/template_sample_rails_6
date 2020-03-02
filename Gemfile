@@ -64,6 +64,8 @@ group :test do
   # Stubbing and setting expectations on HTTP
   gem 'webmock'
   gem 'vcr'
+  # Code coverage
+  gem 'simplecov'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
