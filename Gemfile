@@ -37,6 +37,7 @@ group :development, :test do
   gem 'rubocop-rails', require: false
   gem 'rspec-rails', '~> 3.9.0'
   gem 'rubocop-rspec', require: false
+  gem "rails_best_practices", require: false
 end
 
 group :development do
