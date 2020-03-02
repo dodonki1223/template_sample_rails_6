@@ -1,0 +1,139 @@
+version: "3.7"
+
+# 共通化のための機能でプレフィックスとして"x-"をつける
+# https://docs.docker.com/compose/compose-file/#extension-fields
+# Dockerfileで定義したアプリケーションコンテナの構築で必要な情報を提供する
+x-app: &app
+  build:
+    context: .
+    dockerfile: ./.dockerdev/Dockerfile
+    args:
+      RUBY_VERSION: '2.6.5'
+      PG_MAJOR: '12'
+      NODE_MAJOR: '12'
+      YARN_VERSION: '1.21.1'
+      BUNDLER_VERSION: '2.1.2'
+  environment: &env
+    #「X: ${X:-smth}」は「コンテナ内のXという環境変数はホストマシンにXという環境変数の値があればそれを用い、なければ別の値を用いる」
+    # 「RAILS_ENV=test docker-compose up rails」のようにコマンドで別の環境を指定してサービスを実行できる
+    RAILS_ENV: ${RAILS_ENV:-development}      
+    NODE_ENV: ${NODE_ENV:-development}
+  # tmpフォルダをDockerのtmpsfsマウントを行うことで高速化しています
+  # https://docs.docker.com/v17.09/engine/admin/volumes/tmpfs/
+  tmpfs:
+    - /tmp
+
+# Rubyのサービスで共有するボリュームを提供する
+x-backend-volumes: &backend-volumes
+  volumes:
+    # postgresの設定ファイル
+    - .dockerdev/.psqlrc:/root/.psqlrc:ro
+    # bashrcの設定ファイル
+    - .dockerdev/.bashrc:/root/.bashrc:ro
+    # :cachedはMacOSでのDocker環境の効率を高めるため
+    # https://docs.docker.com/docker-for-mac/osxfs-caching/
+    # https://www.docker.com/blog/user-guided-caching-in-docker-for-mac/#h.gwo2at29v042
+    - .:/app:cached
+    # bundleをDockerボリュームに配置しgemデータを永続化する
+    - bundle:/bundle
+    # Dockerボリュームに配置しホストマシンでディスク操作が重くなるのを回避
+    - rails_cache:/app/tmp/cache
+    - node_modules:/app/node_modules
+    - packs:/app/public/packs
+
+# Rubyのサービスで共有する振る舞いを提供する
+x-backend: &backend
+  <<: *app
+  # コンテナの標準入力をオープンしたままにする
+  stdin_open: true
+  # コンテナに疑似TTYを割り当てる(起動しっぱなしにする)
+  tty: true 
+  environment:
+    # この*envは*appを読み込んでいないと使用できません
+    <<: *env
+    # redisにアクセスできるようの設定
+    REDIS_URL: redis://redis:6379/
+    # boosnapのキャッシュディレクトリを永続化したディレクトリに設定
+    BOOTSNAP_CACHE_DIR: /bundle/bootsnap
+    WEBPACKER_DEV_SERVER_HOST: webpacker
+    # コマンドを使用した時のhistoryが永続化されるので再度コンテナにアクセスした時に
+    # 以前使用したコマンドを履歴から使用できるようになる
+    HISTFILE: /app/log/.bash_history
+    PSQL_HISTFILE: /app/log/.psql_history
+    # `rails credentials:edit`コマンドでcredentialファイルを管理するのに使用する
+    EDITOR: vi
+    # NOTE:説明が難しくてまだ理解できていないとりあえずメモリーに関係があるもの
+    MALLOC_ARENA_MAX: 2
+    # pumaのworker数設定
+    WEB_CONCURRENCY: ${WEB_CONCURRENCY:-1}
+  depends_on:
+    - postgres
+    - redis
+
+services:
+  rails:
+    <<: *backend
+    <<: *backend-volumes
+    command: >
+      bash -c "bundle install &&
+      yarn install --check-files &&
+      bin/rake db:create &&
+      rm -f tmp/pids/server.pid &&
+      bundle exec rails server -b 0.0.0.0"
+    ports:
+      - '3000:3000'
+
+  # railsコンテナにアクセスする時はこちらを使う
+  # docker-compose run --rm runner を実行（テストやマイグレーションやrakeタスク何でもOK）
+  runner:
+    <<: *backend
+    <<: *backend-volumes
+    command: /bin/bash
+    ports:
+      - '3002:3002'
+
+  sidekiq:
+    <<: *backend
+    <<: *backend-volumes
+    command: bundle exec sidekiq -C config/sidekiq.yml
+
+  redis:
+    image: redis:5.0-alpine
+    volumes:
+      - redis:/data
+    ports:
+      - 6379
+
+  webpacker:
+    <<: *app
+    <<: *backend-volumes
+    command: ./bin/webpack-dev-server
+    ports:
+      - '3035:3035'
+    environment:
+      <<: *env
+      # webpacker.ymlの設定を上書き
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+
+  postgres:
+    image: postgres:12.1
+    volumes:
+      # ここのディレクトリに「/docker-entrypoint-initdb.d/」SQLファイルを置いておくと自動で実行してくれる
+      # 詳しくは「https://hub.docker.com/_/postgres」の「Initialization scripts」を参照すること
+      - .dockerdev/init_postgres/:/docker-entrypoint-initdb.d/
+      # psqlコマンドのプロンプトを見やすくするための設定
+      - .dockerdev/.psqlrc:/root/.psqlrc:ro
+      - postgres:/var/lib/postgresql/data
+      - ./log:/root/log:cached
+    environment:
+      PSQL_HISTFILE: /root/log/.psql_history
+    ports:
+      - '5432:5432'
+
+volumes:
+  postgres:
+  bundle:
+  node_modules:
+  rails_cache:
+  packs:
+  redis:
