@@ -15,6 +15,16 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+require 'vcr'
+
+VCR.configure do |c|
+  c.cassette_library_dir = 'spec/vcr'
+  c.hook_into :webmock
+  # vcrブロック外のHTTP通信は許可する(これをtrueにしないとvcr外でHTTP通信を行なうと「UnhandledHTTPRequestError」が発生してしまう)
+  c.allow_http_connections_when_no_cassette = true
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

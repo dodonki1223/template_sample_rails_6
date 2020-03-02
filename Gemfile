@@ -61,6 +61,9 @@ group :test do
   gem 'webdrivers'
   # Generate db datas
   gem 'factory_bot_rails'
+  # Stubbing and setting expectations on HTTP
+  gem 'webmock'
+  gem 'vcr'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
