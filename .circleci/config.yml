@@ -67,6 +67,19 @@ commands:
           # working_directory からの相対パスか絶対パスを指定します
           at: .
 
+  # Linter関連のコマンド
+  linter:
+    steps:
+      - run:
+          name: Rubocop
+          command: bundle exec rubocop --require rubocop-rspec -D -P
+      - run:
+          name: Rails Best Practices
+          command: bundle exec rails_best_practices .
+      - run:
+          name: Brakeman
+          command: bundle exec brakeman
+
 jobs:
   setup:
     executor: base
@@ -79,9 +92,18 @@ jobs:
       - restore-yarn-cache
       - save-yarn-cache
       - save-workspace
+  lint:
+    executor: base
+    steps:
+      - using-workspace
+      - install-bundler
+      - linter
 
 workflows:
   version: 2.1
   main:
     jobs:
       - setup
+      - lint:
+          requires:
+            - setup
