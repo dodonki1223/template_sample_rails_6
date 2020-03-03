@@ -1,0 +1,18 @@
+version: 2.1
+executors:
+  base:
+    docker:
+      - image: circleci/ruby:2.6.5-node-browsers
+    working_directory: ~/dodonki1223/docker_sample_rails_6
+
+jobs:
+  setup:
+    executor: base
+    steps:
+      - checkout
+
+workflows:
+  version: 2.1
+  main:
+    jobs:
+      - setup
