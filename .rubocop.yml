@@ -31,6 +31,10 @@ AllCops:
     - Gemfile
     - Rakefile
 
+# https://rubocop.readthedocs.io/en/latest/cops_style/#styleasciicomments
+Style/AsciiComments:
+  Enabled: false
+
 # https://rubocop.readthedocs.io/en/latest/cops_style/#stylehasheachmethods
 Style/HashEachMethods:
   Enabled: true
