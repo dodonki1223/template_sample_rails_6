@@ -108,6 +108,13 @@ commands:
           name: Brakeman
           command: bundle exec brakeman
 
+  # テスト関連コマンド
+  testing:
+    steps:
+      - run:
+          name: Run all RSpec
+          command: bundle exec rspec --format progress
+
 jobs:
   setup:
     executor: base
@@ -128,6 +135,12 @@ jobs:
       - using-workspace
       - install-bundler
       - linter
+  test:
+    executor: base
+    steps:
+      - using-workspace
+      - install-bundler
+      - testing
 
 workflows:
   version: 2.1
@@ -135,5 +148,8 @@ workflows:
     jobs:
       - setup
       - lint:
+          requires:
+            - setup
+      - test:
           requires:
             - setup
