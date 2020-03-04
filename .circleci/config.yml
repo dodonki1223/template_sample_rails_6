@@ -27,12 +27,12 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - v1-gem-cache-docker-sample-{{ checksum "Gemfile.lock" }}
-            - v1-gem-cache-docker-sample-
+            - v2-gem-cache-docker-sample-{{ checksum "Gemfile.lock" }}
+            - v2-gem-cache-docker-sample-
   save-bundle-cache:
     steps:
       - save_cache:
-          key: v1-gem-cache-docker-sample-{{ checksum "Gemfile.lock" }}
+          key: v2-gem-cache-docker-sample-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
             - ~/.bundle
@@ -42,12 +42,12 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - yarn-packages-docker-sample-v1-{{ checksum "yarn.lock" }}
-            - yarn-packages-docker-sample-v1-
+            - yarn-packages-docker-sample-v2-{{ checksum "yarn.lock" }}
+            - yarn-packages-docker-sample-v2-
   save-yarn-cache:
     steps:
       - save_cache:
-          key: yarn-packages-docker-sample-v1-{{ checksum "yarn.lock" }}
+          key: yarn-packages-docker-sample-v2-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
 
