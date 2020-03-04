@@ -54,6 +54,14 @@ commands:
           name: Bundle install
           command: bundle check --path=vendor/bundle || bundle install --jobs=4 --retry=3 --path vendor/bundle
 
+  # RSpecを実行するための設定系コマンド（主にフロントエンド部分）
+  test-client-settings:
+    steps:
+      - run:
+          name: RSpec Setup for webpacker
+          command: |
+            yarn install --check-files --cache-folder ~/.cache/yarn
+            NODE_ENV=production bin/rails webpacker:compile
   # ワークスペース関連のコマンド
   save-workspace:
     steps:
@@ -90,6 +98,7 @@ jobs:
       - bundle-install
       - save-bundle-cache
       - restore-yarn-cache
+      - test-client-settings
       - save-yarn-cache
       - save-workspace
   lint:
