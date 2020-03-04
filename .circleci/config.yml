@@ -16,7 +16,7 @@ executors:
       - RAILS_ENV: test
       - PGHOST: 127.0.0.1
       - PGUSER: root
-    working_directory: ~/dodonki1223/docker_sample_rails_6
+    working_directory: ~/dodonki1223/template_sample_rails_6
 
 commands:
   # 依存関係のキャッシュを行うコマンド類
