@@ -115,6 +115,15 @@ commands:
           name: Run all RSpec
           command: bundle exec rspec --format progress
 
+  # テストカバレッジ関連のコマンド
+  # https://circleci.com/docs/2.0/code-coverage/#ruby
+  # https://github.com/colszowka/simplecov/#getting-started
+  store-coverage:
+    steps:
+      - store_artifacts:
+          path: coverage
+          destination: coverage-results
+
 jobs:
   setup:
     executor: base
@@ -141,6 +150,7 @@ jobs:
       - using-workspace
       - install-bundler
       - testing
+      - store-coverage
 
 workflows:
   version: 2.1
