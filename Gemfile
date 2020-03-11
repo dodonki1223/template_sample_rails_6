@@ -40,6 +40,10 @@ group :development, :test do
   gem "rails_best_practices", require: false
   # Test tool
   gem 'rspec-rails', '~> 3.9.0'
+  # Debug tool
+  gem 'pry-rails'
+  gem 'pry-doc'
+  gem 'pry-byebug'
 end
 
 group :development do
