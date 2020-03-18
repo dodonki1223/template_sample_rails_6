@@ -84,3 +84,7 @@ Style/FrozenStringLiteralComment:
 Style/BlockComments:
   Exclude:
     - spec/spec_helper.rb
+
+# https://rubocop-rspec.readthedocs.io/en/latest/cops_rspec/#rspecnestedgroups
+RSpec/NestedGroups:
+  Max: 5
