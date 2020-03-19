@@ -124,6 +124,30 @@ commands:
           path: coverage
           destination: coverage-results
 
+  # ドキュメント関連コマンド
+  development-db-settings:
+    steps:
+      - run:
+          name: Create development database
+          command: |
+            cp config/{database_circleci,database}.yml
+            RAILS_ENV=development bin/rails db:schema:load --trace
+  generate-entity-relationship-diagrams:
+    steps:
+      - run:
+          name: Install graphviz
+          command: |
+            sudo apt-get update
+            sudo apt-get install graphviz
+      - run:
+          name: Run Rails ERD
+          command: RAILS_ENV=development bin/rake erd
+  store-entity-relationship-diagrams:
+    steps:
+      - store_artifacts:
+          path: db/erd/template_sample_rials6_db.png
+          destination: db/erd/template_sample_rials6_db.png
+
 jobs:
   setup:
     executor: base
@@ -151,6 +175,14 @@ jobs:
       - install-bundler
       - testing
       - store-coverage
+  document:
+    executor: base
+    steps:
+      - using-workspace
+      - install-bundler
+      - development-db-settings
+      - generate-entity-relationship-diagrams
+      - store-entity-relationship-diagrams
 
 workflows:
   version: 2.1
@@ -161,5 +193,8 @@ workflows:
           requires:
             - setup
       - test:
+          requires:
+            - setup
+      - document:
           requires:
             - setup
