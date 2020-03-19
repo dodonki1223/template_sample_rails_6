@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  slack: circleci/slack@3.4.2
 executors:
   base:
     docker:
@@ -198,3 +200,18 @@ workflows:
       - document:
           requires:
             - setup
+      - slack/approval-notification:
+          message: ':circleci-pass: $CIRCLE_BRANCH ブランチのデプロイ準備が整っています\n:github_octocat: User: $CIRCLE_USERNAME\nデプロイを実行する場合は *Approve* を押してください'
+          requires:
+            - lint
+            - test
+          filters:
+            branches:
+              only: master
+      - approval-job:
+          # approvalの仕様がよくわかんなかったがこの記事である程度理解した
+          # https://qiita.com/wasnot/items/baeb5862da83e658da86
+          # https://circleci.com/docs/2.0/workflows/#holding-a-workflow-for-a-manual-approval
+          type: approval
+          requires:
+            - slack/approval-notification
