@@ -1,0 +1,11 @@
+# Document: https://voormedia.github.io/rails-erd/customise.html
+attributes:
+  - content
+  - foreign_key
+  - primary_keys
+  - inheritance
+  - timestamps
+sort: false
+title: 'TemplateSampleRails6 domain model'
+filetype: png
+filename: db/erd/template_sample_rials6_db

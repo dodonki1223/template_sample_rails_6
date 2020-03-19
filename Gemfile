@@ -55,6 +55,8 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   # A static analysis security vulnerability scanner
   gem 'brakeman'
+  # Generate Entity-Relationship Diagrams
+  gem 'rails-erd'
 end
 
 group :test do
