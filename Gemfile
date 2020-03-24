@@ -40,6 +40,8 @@ group :development, :test do
   gem "rails_best_practices", require: false
   # Test tool
   gem 'rspec-rails', '~> 3.9.0'
+  # Generate db datas for test
+  gem 'factory_bot_rails'
   # Debug tool
   gem 'pry-rails'
   gem 'pry-doc'
@@ -65,8 +67,6 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
-  # Generate db datas
-  gem 'factory_bot_rails'
   # Stubbing and setting expectations on HTTP
   gem 'webmock'
   gem 'vcr'
