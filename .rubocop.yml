@@ -79,11 +79,24 @@ Style/BlockComments:
   Exclude:
     - spec/spec_helper.rb
 
+# https://rubocop.readthedocs.io/en/latest/cops_style/#stylesymbolarray
+# Use EnforcedStyle: brackets
+Style/SymbolArray:
+  Enabled: false
+
+# https://rubocop.readthedocs.io/en/latest/cops_metrics/#metricsblocklength
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
 # https://rubocop-rspec.readthedocs.io/en/latest/cops_rspec/#rspecnestedgroups
 RSpec/NestedGroups:
   Max: 5
 
-# https://rubocop.readthedocs.io/en/latest/cops_style/#stylesymbolarray
-# Use EnforcedStyle: brackets
-Style/SymbolArray:
+# https://rubocop-rspec.readthedocs.io/en/latest/cops_rspec/#rspecmultipleexpectations
+RSpec/MultipleExpectations:
+  Max: 4
+
+# https://rubocop-rspec.readthedocs.io/en/latest/cops_rspec/#rspecinstancevariable
+RSpec/InstanceVariable:
   Enabled: false
