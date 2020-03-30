@@ -55,13 +55,7 @@ Style/ClassAndModuleChildren:
 
 # https://rubocop.readthedocs.io/en/latest/cops_style/#styledocumentation
 Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'app/helpers/application_helper.rb'
-    - 'app/mailers/application_mailer.rb'
-    - 'app/models/application_record.rb'
-    - 'config/application.rb'
+  Enabled: false
 
 # https://rubocop.readthedocs.io/en/latest/cops_style/#stylestringliterals
 Style/StringLiterals:
