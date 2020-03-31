@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   slack: circleci/slack@3.4.2
+  heroku: circleci/heroku@1.0.1
 executors:
   base:
     docker:
@@ -150,6 +151,29 @@ commands:
           path: db/erd/template_sample_rials6_db.png
           destination: db/erd/template_sample_rials6_db.png
 
+  # デプロイ関連コマンド
+  deploy-heroku:
+    parameters:
+      environment:
+        type: enum
+        enum: ["PRODUCTION", "DEVELOPMENT"]
+    steps:
+      - heroku/install
+      - heroku/deploy-via-git:
+          app-name: $HEROKU_APP_NAME_<< parameters.environment >>
+      - run:
+          name: DB migration
+          command: heroku run --app=$HEROKU_APP_NAME_<< parameters.environment >> bin/rake db:migrate
+  deploy-notification:
+    parameters:
+      environment:
+        type: enum
+        enum: ["PRODUCTION", "DEVELOPMENT"]
+    steps:
+      - slack/status:
+          success_message: ':circleci-pass: Herokuの << parameters.environment >> 環境にデプロイが完了しました\n:github_octocat: User: $CIRCLE_USERNAME, Branch: $CIRCLE_BRANCH'
+          failure_message: ':circleci-fail: Herokuの << parameters.environment >> 環境にデプロイが失敗しました\n:github_octocat: User: $CIRCLE_USERNAME, Branch: $CIRCLE_BRANCH'
+
 jobs:
   setup:
     executor: base
@@ -185,6 +209,24 @@ jobs:
       - development-db-settings
       - generate-entity-relationship-diagrams
       - store-entity-relationship-diagrams
+  deploy-heroku-development:
+    executor: base
+    steps:
+      - using-workspace
+      - install-bundler
+      - deploy-heroku:
+          environment: DEVELOPMENT
+      - deploy-notification:
+          environment: DEVELOPMENT
+  deploy-heroku-production:
+    executor: base
+    steps:
+      - using-workspace
+      - install-bundler
+      - deploy-heroku:
+          environment: PRODUCTION
+      - deploy-notification:
+          environment: PRODUCTION
 
 workflows:
   version: 2.1
@@ -215,3 +257,15 @@ workflows:
           type: approval
           requires:
             - slack/approval-notification
+      - deploy-heroku-development:
+          requires:
+            - approval-job
+          filters:
+            branches:
+              ignore: master
+      - deploy-heroku-production:
+          requires:
+            - approval-job
+          filters:
+            branches:
+              only: master
