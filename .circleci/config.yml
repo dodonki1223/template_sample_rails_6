@@ -161,6 +161,7 @@ commands:
       - heroku/install
       - heroku/deploy-via-git:
           app-name: $HEROKU_APP_NAME_<< parameters.environment >>
+          force: true
       - run:
           name: DB migration
           command: heroku run --app=$HEROKU_APP_NAME_<< parameters.environment >> bin/rake db:migrate
