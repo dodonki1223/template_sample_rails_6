@@ -39,7 +39,8 @@ group :development, :test do
   gem 'rubocop-rspec', require: false
   gem "rails_best_practices", require: false
   # Test tool
-  gem 'rspec-rails', '~> 3.9.0'
+  # https://github.com/rspec/rspec-rails/issues/2177#issuecomment-552247649
+  gem 'rspec-rails', '4.0.0.beta3'
   # Generate db datas for test
   gem 'factory_bot_rails'
   # Debug tool
