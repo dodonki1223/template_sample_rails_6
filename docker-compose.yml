@@ -53,7 +53,7 @@ x-backend: &backend
     <<: *env
     # redisにアクセスできるようの設定
     REDIS_URL: redis://redis:6379/
-    # boosnapのキャッシュディレクトリを永続化したディレクトリに設定
+    # bootsnapのキャッシュディレクトリを永続化したディレクトリに設定
     BOOTSNAP_CACHE_DIR: /bundle/bootsnap
     WEBPACKER_DEV_SERVER_HOST: webpacker
     # コマンドを使用した時のhistoryが永続化されるので再度コンテナにアクセスした時に
@@ -85,6 +85,7 @@ services:
 
   # railsコンテナにアクセスする時はこちらを使う
   # docker-compose run --rm runner を実行（テストやマイグレーションやrakeタスク何でもOK）
+  # ただしテストを実行する時は RAILS_ENV=test bundle exec rspec --format progress で実行すること
   runner:
     <<: *backend
     <<: *backend-volumes
