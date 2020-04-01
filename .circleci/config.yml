@@ -248,9 +248,6 @@ workflows:
           requires:
             - lint
             - test
-          filters:
-            branches:
-              only: master
       - approval-job:
           # approvalの仕様がよくわかんなかったがこの記事である程度理解した
           # https://qiita.com/wasnot/items/baeb5862da83e658da86
