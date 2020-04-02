@@ -22,6 +22,8 @@ $ docker-compose up rails
 
 こちらのURL:[http://localhost:3000/](http://localhost:3000/) にアクセスすることで動作確認できます
 
+**Dockerがインストールされていないと動かすことはできません**
+
 ## 環境について
 
 ### バージョン情報
@@ -35,6 +37,10 @@ $ docker-compose up rails
 | Yarn                 | 12            |
 | Bundler              | 2.1.2         |
 | Redis                | 5.0           |
+
+### ローカルでの開発について
+
+基本的にDockerを使用して開発を行えるようになっているのでPCにDockerがインストールされていれば問題ないです
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
