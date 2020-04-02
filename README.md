@@ -42,6 +42,11 @@ $ docker-compose up rails
 
 基本的にDockerを使用して開発を行えるようになっているのでPCにDockerがインストールされていれば問題ないです
 
+### CI（継続的インテグレーション）/CD（継続的デリバリー）環境 - Lint/Test/Deploy
+
+自動テスト、静的コード解析、WebアプリケーションのデプロイはCircleCIで実装されていてデプロイ先には**Heroku**を使用しているのでCircleCIとHerokuの設定も必要になります  
+またCircleCIの通知用（デプロイの実行、完了通知）としてSlackも使用しているので自分用のWorkspaceを作成することをオススメします
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
