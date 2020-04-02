@@ -78,6 +78,7 @@ services:
       bash -c "bundle install &&
       yarn install --check-files &&
       bin/rake db:create &&
+      bin/rake db:migrate &&
       rm -f tmp/pids/server.pid &&
       bundle exec rails server -b 0.0.0.0"
     ports:
