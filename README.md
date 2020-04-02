@@ -22,6 +22,20 @@ $ docker-compose up rails
 
 こちらのURL:[http://localhost:3000/](http://localhost:3000/) にアクセスすることで動作確認できます
 
+## 環境について
+
+### バージョン情報
+
+| ソフトウェアスタック | バージョン    |
+|:---------------------|:-------------:|
+| Rails                | 6.0.2.1以上   |
+| Ruby                 | 2.6.5         |
+| PostgreSQL           | 12            |
+| Node.js              | 12            |
+| Yarn                 | 12            |
+| Bundler              | 2.1.2         |
+| Redis                | 5.0           |
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
