@@ -42,6 +42,16 @@ $ docker-compose up rails
 
 基本的にDockerを使用して開発を行えるようになっているのでPCにDockerがインストールされていれば問題ないです
 
+#### PostgreSQLへの接続情報
+
+| DB情報       | 値            |
+|:-------------|:-------------:|
+| Host         | 127.0.0.1     |
+| User         | root          |
+| Password     |               |
+| Port         | 5432          |
+| DatabaseName | dev_sample_db |
+
 ### CI（継続的インテグレーション）/CD（継続的デリバリー）環境 - Lint/Test/Deploy
 
 自動テスト、静的コード解析、WebアプリケーションのデプロイはCircleCIで実装されていてデプロイ先には**Heroku**を使用しているのでCircleCIとHerokuの設定も必要になります  
