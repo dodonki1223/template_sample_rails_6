@@ -57,6 +57,48 @@ $ docker-compose up rails
 自動テスト、静的コード解析、WebアプリケーションのデプロイはCircleCIで実装されていてデプロイ先には**Heroku**を使用しているのでCircleCIとHerokuの設定も必要になります  
 またCircleCIの通知用（デプロイの実行、完了通知）としてSlackも使用しているので自分用のWorkspaceを作成することをオススメします
 
+## 設定
+
+### CircleCI
+
+CircleCIで自動テスト、静的コード解析、Webアプリケーションのデプロイをできようにするため
+CircleCIにプロジェクトの設定を行います
+
+#### プロジェクトの設定を行う
+
+こちらのURLに 「[https://app.circleci.com/projects/project-dashboard/github/GitHubのユーザー名](https://app.circleci.com/projects/project-dashboard/github/dodonki1223)」 アクセスし対象のプロジェクトの `Set Up Project` をクリックします
+
+![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/01_set_up_project_circleci.png)
+
+`Start Building` をクリックします
+
+![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/02_start_building.png)
+
+`config.yml` は既に存在しているので `Add Manually` をクリックします
+
+![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/03_add_manually.png)
+
+`Start Building` をクリックします
+
+![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/04_already_added_start_building.png)
+
+CircleCIが実行されます。 `main` をクリックして詳細を確認します
+
+![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/05_start_pipelines.png)
+
+workflowの実行状態が確認できます
+
+![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/06_display_workflow.png)
+
+時間が経つとworkflowが失敗することが確認できます  
+これはCircleCIに環境変数など設定していないためです
+
+![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/07_workflow_failed.png)
+
+#### 環境変数の設定を行う
+
+#### 再度実行して正しく動作することを確認する
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
