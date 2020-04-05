@@ -255,6 +255,11 @@ workflows:
           type: approval
           requires:
             - slack/approval-notification
+          filters:
+            branches:
+              only:
+                - development
+                - master
       - deploy-heroku-development:
           requires:
             - approval-job
