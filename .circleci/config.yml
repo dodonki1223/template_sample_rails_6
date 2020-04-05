@@ -260,7 +260,7 @@ workflows:
             - approval-job
           filters:
             branches:
-              ignore: master
+              only: development
       - deploy-heroku-production:
           requires:
             - approval-job
