@@ -59,6 +59,73 @@ $ docker-compose up rails
 
 ## 設定
 
+### Heroku
+
+Herokuを使用し簡単にWebアプリケーションをデプロイできるようにします
+
+#### Heroku CLIのインストール
+
+Herokuをコマンドラインから使用できるように `Heroku CLI` をインストールします  
+下記コマンドを実行してインストールします
+
+詳しくは[公式ドキュメント](https://devcenter.heroku.com/articles/heroku-cli)を参照してください
+
+```shell
+$ brew tap heroku/brew && brew install heroku
+```
+
+#### Herokuにアプリケーションを作成する
+
+template_sample_rails_6では `Production環境` と `Development環境` を作成します  
+`Production環境` と `Development環境` それぞれに自動でデプロイされる仕組みがCircleCIに組み込まれています  
+
+Production環境を作成する
+
+```shell
+# template-rails-prdの部分はアプリケーションの名前なので自由に決めてもらって構いません
+$ heroku create template-rails-prd
+```
+
+Development環境を作成する
+
+```shell
+# template-rails-devの部分はアプリケーションの名前なので自由に決めてもらって構いません
+$ heroku create template-rails-dev
+```
+![01_create_apps](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/heroku/01_create_apps.png)
+
+[Personal apps](https://dashboard.heroku.com/apps) ページにアクセスして `Production環境` と `Development環境` がそれぞれできていればOKです
+
+![02_created_apps](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/heroku/02_created_apps.png)
+
+#### 手動でデプロイする
+
+HerokuへPushする
+
+```shell
+$  git push heroku master
+```
+
+[https://dashboard.heroku.com/apps/アプリ名](https://dashboard.heroku.com/apps/アプリ名) にアクセスして下記のような表示なっていればOKです
+
+![03_deployed_app](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/heroku/03_deployed_app.png)
+
+Pushしたアプリケーションのマイグレーションを実行する
+
+```shell
+$ heroku run bin/rake db:migrate
+```
+
+Webアプリケーションがデプロイされたか確認する
+
+```shell
+$ heroku open
+```
+
+下記のように表示されていればで手動デプロイ完了です
+
+![04_open_app](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/heroku/04_open_app.png)
+
 ### CircleCI
 
 CircleCIで自動テスト、静的コード解析、Webアプリケーションのデプロイをできようにするため
@@ -68,32 +135,32 @@ CircleCIにプロジェクトの設定を行います
 
 こちらのURLに 「[https://app.circleci.com/projects/project-dashboard/github/GitHubのユーザー名](https://app.circleci.com/projects/project-dashboard/github/dodonki1223)」 アクセスし対象のプロジェクトの `Set Up Project` をクリックします
 
-![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/01_set_up_project_circleci.png)
+![01_set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/01_set_up_project_circleci.png)
 
 `Start Building` をクリックします
 
-![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/02_start_building.png)
+![02_start_building](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/02_start_building.png)
 
 `config.yml` は既に存在しているので `Add Manually` をクリックします
 
-![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/03_add_manually.png)
+![03_add_manually](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/03_add_manually.png)
 
 `Start Building` をクリックします
 
-![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/04_already_added_start_building.png)
+![04_already_added_start_building](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/04_already_added_start_building.png)
 
 CircleCIが実行されます。 `main` をクリックして詳細を確認します
 
-![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/05_start_pipelines.png)
+![05_start_pipelines](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/05_start_pipelines.png)
 
 workflowの実行状態が確認できます
 
-![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/06_display_workflow.png)
+![06_display_workflow](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/06_display_workflow.png)
 
 時間が経つとworkflowが失敗することが確認できます  
 これはCircleCIに環境変数など設定していないためです
 
-![set_up_project_circleci](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/07_workflow_failed.png)
+![07_workflow_failed](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/07_workflow_failed.png)
 
 #### 環境変数の設定を行う
 
