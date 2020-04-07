@@ -5,6 +5,20 @@
 Rails6アプリケーションの開発をすぐに始められるように素のRails6アプリケーションを元に自分流にカスタマイズしたものになります  
 またソースコードに不必要なコメントを大量に書いているので使用する場合は適宜、削除することをオススメします
 
+## 改修箇所
+
+- Docker化
+    - Redis、Sidekiqの導入
+- DBをPostgreSQLに変更
+- RSepcの導入
+    - factory_botの導入（テストデータ作成ツール）
+    - SimpleCovの導入（コードカバレッジ）
+- Rails ERDの導入（ER図自動生成ツール）
+- デバッグツールの導入（binding.pryを使用可能にする）
+- 静的コード解析ツールの導入（Rubocop、Rails Best Practices、Brakeman）
+- CircleCIによる自動テスト、静的コード解析、自動デプロイ（Heroku）
+- Railsガイドで紹介されている [rails generate scaffold HighScore game:string score:integer](https://railsguides.jp/command_line.html#rails-generate) を叩いた状態
+
 ## tempalte_sample_rails_6を動かす
 
 下記コマンドを実行します
@@ -126,9 +140,54 @@ $ heroku open
 
 ![04_open_app](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/heroku/04_open_app.png)
 
+### Slack
+
+![01_notify_sample](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/slack/01_notify_sample.png)
+
+CircleCIで `デプロイ承認通知` と `デプロイ完了通知` を行うために自分専用のワークスペースを作成し設定します  
+ワークスペースは作成してあることを前提に進みます
+
+#### Incoming Webhookをインストール
+
+[https://ワークスペース名.slack.com/apps](https://ワークスペース名.slack.com/apps) にアクセスし `webhook` と入力します  
+検索のリストに出てきた `Incoming Webhook` をクリックします
+
+![02_search_incoming_webhook](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/slack/02_search_incoming_webhook.png)
+
+`Slackに追加` をクリックします
+
+![03_add_slack](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/slack/03_add_slack.png)
+
+`通知させるチャンネル` を選択し `Incoming Webhook インテグレーションの追加` をクリックします  
+このサンプルでは `general` チャンネルに通知されるように設定しています
+
+![04_select_channel](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/slack/04_select_channel.png)
+
+詳細の設定画面では 名前とアイコンをカスタマイズすることでなんの通知かわかりやすくなるので設定しておきましょう
+
+![05_customize_name_and_icon](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/slack/05_customize_name_and_icon.png)
+
+`設定を保存する` をクリックして下記の画面になれば大丈夫です
+
+![06_setting_end](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/slack/06_setting_end.png)
+
+#### スタンプを追加する
+
+通知用にカスタム絵文字を使用するので以下の3つを追加してください  
+追加する時は `カスタム絵文字を追加する` をクリックしてください
+
+- :circleci-fail:
+- :circleci-pass:
+- :github_octocat:
+
+![07_custom_emoji](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/slack/07_cutom_emoji.png)
+
+- GitHubのアイコンは[こちらから](https://github.com/logos)ダウンロードできます
+- CircleCIのアイコンは[メール通知](https://circleci.com/docs/ja/2.0/notifications/#%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%9A%E7%9F%A5%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%81%A8%E5%A4%89%E6%9B%B4)のものを使用すると良いと思います
+
 ### CircleCI
 
-CircleCIで自動テスト、静的コード解析、Webアプリケーションのデプロイをできようにするため
+CircleCIで自動テスト、静的コード解析、Webアプリケーションのデプロイをできようにするため  
 CircleCIにプロジェクトの設定を行います
 
 #### プロジェクトの設定を行う
@@ -164,7 +223,85 @@ workflowの実行状態が確認できます
 
 #### 環境変数の設定を行う
 
+`Project Settings` をクリックします
+
+![08_to_project_settings](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/08_to_project_settings.png)
+
+`Environment Variables` メニューをクリックして環境変数を設定していきます
+
+![09_environment_variables_settings](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/09_environment_variables_settings.png)
+
+環境変数は下記の4つの設定が必要です
+
+| 環境変数名                  | 説明                              |
+|:----------------------------|:----------------------------------|
+| HEROKU_API_KEY              | HerokuのAPIキー                   |
+| HEROKU_APP_NAME_DEVELOPMENT | HerokuのDevelopment環境のアプリ名 |
+| HEROKU_APP_NAME_PRODUCTION  | HerokuのProduction環境のアプリ名  |
+| SLACK_WEBHOOK               | SlackのWebHookのURL               |
+
+**HEROKU_API_KEY**
+
+[https://dashboard.heroku.com/account](https://dashboard.heroku.com/account) にアクセスしAPI Keyの `Reveal` をクリックしてAPI KeyをコピーしてCircleCIに設定してください
+
+![10_heroku_api_key](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/10_heroku_api_key.png)
+
+![11_heroku_api_key_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/11_heroku_api_key_setting.png)
+
+**HEROKU_APP_NAME_DEVELOPMENT、HEROKU_APP_NAME_PRODUCTION**
+
+[https://dashboard.heroku.com/apps](https://dashboard.heroku.com/apps) にアクセスして Development環境とProduction環境のアプリ名をコピーして設定してください
+
+![12_heroku_apps_list](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/12_heroku_apps_list.png)
+
+![13_heroku_app_name_development_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/13_heroku_app_name_development_setting.png)
+
+![14_heroku_app_name_production_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/14_heroku_app_name_production_setting.png)
+
+**SLACK_WEBHOOK**
+
+`Incoming Webhook` のページにアクセスし `設定を編集` をクリックします
+
+![15_incoming_webhook](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/15_incoming_webhook.png)
+
+編集画面の `Webhook URL` の `URLをコピーする` をクリックし環境変数に設定します
+
+![16_slack_webhook_url](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/16_slack_webhook_url.png)
+
+![17_slack_webhook_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/17_slack_webhook_setting.png)
+
+以下のようになっていればOKです
+
+![18_complete_environment_variables](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/18_complete_environment_variables.png)
+
 #### 再度実行して正しく動作することを確認する
+
+[https://app.circleci.com/pipelines/github/GitHubのアカウント名/リポジトリ名](https://app.circleci.com/pipelines/github/GitHubのアカウント名/リポジトリ名) にアクセスします  
+失敗したWorkflowをクリックします
+
+![19_select_failed_workflow](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/19_select_failed_workflow.png)
+
+`Rerun Workflow from Failed` をクリックして失敗した箇所から再度実行します
+
+![20_rerun_workflow_from_failed](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/20_rerun_workflow_from_failed.png)
+
+再度実行するとSlackにApprove通知が来るので `Visit Workflow` をクリックします
+
+![21_notify_approve_for_slack](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/21_notify_approve_for_slack.png)
+
+Workflowへ飛ぶので 停止中の `approval-job` をクリックします  
+もし処理を続行させたくない場合は `Rerun` のところから `Cancel Workflow` をクリックすることで処理を終了させることができます
+
+![22_click_approve_job](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/22_click_approve_job.png)
+
+`Approve` をクリックし処理を続行させます
+
+![23_approve_job](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/23_approve_job.png)
+
+デプロイが完了するとSlackにデプロイ完了通知が来ます  
+これで自動デプロイ完了です
+
+![24_deploy_complete](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/24_deploy_complete.png)
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
