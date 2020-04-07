@@ -276,6 +276,33 @@ workflowの実行状態が確認できます
 
 #### 再度実行して正しく動作することを確認する
 
+[https://app.circleci.com/pipelines/github/GitHubのアカウント名/リポジトリ名](https://app.circleci.com/pipelines/github/GitHubのアカウント名/リポジトリ名) にアクセスします  
+失敗したWorkflowをクリックします
+
+![19_select_failed_workflow](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/19_select_failed_workflow.png)
+
+`Rerun Workflow from Failed` をクリックして失敗した箇所から再度実行します
+
+![20_rerun_workflow_from_failed](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/20_rerun_workflow_from_failed.png)
+
+再度実行するとSlackにApprove通知が来るので `Visit Workflow` をクリックします
+
+![21_notify_approve_for_slack](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/21_notify_approve_for_slack.png)
+
+Workflowへ飛ぶので 停止中の `approval-job` をクリックします  
+もし処理を続行させたくない場合は `Rerun` のところから `Cancel Workflow` をクリックすることで処理を終了させることができます
+
+![22_click_approve_job](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/22_click_approve_job.png)
+
+`Approve` をクリックし処理を続行させます
+
+![23_approve_job](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/23_approve_job.png)
+
+デプロイが完了するとSlackにデプロイ完了通知が来ます  
+これで自動デプロイ完了です
+
+![24_deploy_complete](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/24_deploy_complete.png)
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
