@@ -223,6 +223,57 @@ workflowの実行状態が確認できます
 
 #### 環境変数の設定を行う
 
+`Project Settings` をクリックします
+
+![08_to_project_settings](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/08_to_project_settings.png)
+
+`Environment Variables` メニューをクリックして環境変数を設定していきます
+
+![09_environment_variables_settings](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/09_environment_variables_settings.png)
+
+環境変数は下記の4つの設定が必要です
+
+| 環境変数名                  | 説明                              |
+|:----------------------------|:----------------------------------|
+| HEROKU_API_KEY              | HerokuのAPIキー                   |
+| HEROKU_APP_NAME_DEVELOPMENT | HerokuのDevelopment環境のアプリ名 |
+| HEROKU_APP_NAME_PRODUCTION  | HerokuのProduction環境のアプリ名  |
+| SLACK_WEBHOOK               | SlackのWebHookのURL               |
+
+**HEROKU_API_KEY**
+
+[https://dashboard.heroku.com/account](https://dashboard.heroku.com/account) にアクセスしAPI Keyの `Reveal` をクリックしてAPI KeyをコピーしてCircleCIに設定してください
+
+![10_heroku_api_key](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/10_heroku_api_key.png)
+
+![11_heroku_api_key_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/11_heroku_api_key_setting.png)
+
+**HEROKU_APP_NAME_DEVELOPMENT、HEROKU_APP_NAME_PRODUCTION**
+
+[https://dashboard.heroku.com/apps](https://dashboard.heroku.com/apps) にアクセスして Development環境とProduction環境のアプリ名をコピーして設定してください
+
+![12_heroku_apps_list](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/12_heroku_apps_list.png)
+
+![13_heroku_app_name_development_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/13_heroku_app_name_development_setting.png)
+
+![14_heroku_app_name_production_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/14_heroku_app_name_production_setting.png)
+
+**SLACK_WEBHOOK**
+
+`Incoming Webhook` のページにアクセスし `設定を編集` をクリックします
+
+![15_incoming_webhook](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/15_incoming_webhook.png)
+
+編集画面の `Webhook URL` の `URLをコピーする` をクリックし環境変数に設定します
+
+![16_slack_webhook_url](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/16_slack_webhook_url.png)
+
+![17_slack_webhook_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/17_slack_webhook_setting.png)
+
+以下のようになっていればOKです
+
+![18_complete_environment_variables](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/18_complete_environment_variables.png)
+
 #### 再度実行して正しく動作することを確認する
 
 This README would normally document whatever steps are necessary to get the
