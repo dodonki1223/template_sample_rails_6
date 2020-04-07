@@ -5,6 +5,20 @@
 Rails6アプリケーションの開発をすぐに始められるように素のRails6アプリケーションを元に自分流にカスタマイズしたものになります  
 またソースコードに不必要なコメントを大量に書いているので使用する場合は適宜、削除することをオススメします
 
+## 改修箇所
+
+- Docker化
+    - Redis、Sidekiqの導入
+- DBをPostgreSQLに変更
+- RSepcの導入
+    - factory_botの導入（テストデータ作成ツール）
+    - SimpleCovの導入（コードカバレッジ）
+- Rails ERDの導入（ER図自動生成ツール）
+- デバッグツールの導入（binding.pryを使用可能にする）
+- 静的コード解析ツールの導入（Rubocop、Rails Best Practices、Brakeman）
+- CircleCIによる自動テスト、静的コード解析、自動デプロイ（Heroku）
+- Railsガイドで紹介されている [rails generate scaffold HighScore game:string score:integer](https://railsguides.jp/command_line.html#rails-generate) を叩いた状態
+
 ## tempalte_sample_rails_6を動かす
 
 下記コマンドを実行します
