@@ -303,6 +303,116 @@ Workflowへ飛ぶので 停止中の `approval-job` をクリックします
 
 ![24_deploy_complete](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/24_deploy_complete.png)
 
+## 開発
+
+開発環境にはRails以外にもRedisやSidekiq、Webpackerが導入されています  
+起動方法やコマンドの実行方法を解説します
+
+### Railsを起動する
+
+```shell
+$ docker-compose up rails
+```
+
+※`PostgreSQL` 、 `Redis` も一緒に起動します
+
+### Webpackerを起動する
+
+```shell
+$ docker-compose up webpacker
+```
+
+### Sidekiqを起動する
+
+```shell
+$ docker-compose up sidekiq
+```
+
+### Runnerを起動する
+
+Runnerはコマンドを実行するためのサービスになります  
+rakeコマンドやRSpecを実行するために使用します
+
+```shell
+$ docker-compose run runner
+```
+
+以下の説明は `docker-compose run runner` 実行後の説明になります
+
+#### RSpecを実行する
+
+起動後のRunnerはデフォルトだと `RAILS_ENV=development` になっているためコマンドで明示的に `RAILS_ENV=test` を指定して実行します
+
+```shell
+# bundle exec ありバージョン
+$ RAILS_ENV=test bundle exec rspec --format progress
+
+# bundle exec なしバージョン
+$ RAILS_ENV=test rspec --format progress
+```
+
+#### RuboCopを実行する
+
+```shell
+# bundle exec ありバージョン
+$ bundle exec rubocop --require rubocop-rspec -D -P
+
+# bundle exec なしバージョン
+$ rubocop --require rubocop-rspec -D -P
+```
+
+#### Rails Best Practicesを実行する
+
+```shell
+# bundle exec ありバージョン
+$ bundle exec rails_best_practices .
+
+# bundle exec なしバージョン
+$ rails_best_practices .
+```
+
+#### Brakemanを実行する
+
+```shell
+# bundle exec ありバージョン
+$ bundle exec brakeman
+
+# bundle exec なしバージョン
+$ brakeman
+```
+
+#### rakeコマンドを実行する
+
+```shell
+# bin/ ありバージョン
+$ bin/rake about
+
+# bin/ なしバージョン
+$ rake about
+```
+
+#### railsコマンドを実行する
+
+```shell
+# bin/ ありバージョン
+$ bin/rails g --help
+
+# bin/ なしバージョン
+$ rails g --help
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
