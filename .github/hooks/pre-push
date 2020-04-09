@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# pre-pushを使用するために以下のコマンドをアプリケーション直下で実行してください
+#   ・pre-pushは実行権限が無いとhookされないのでchmod 755を行います
+#   ・ローカルでpre-pushを実行するためにはローカルの環境を整える必要があります
+#   ・Dockerを使っているのにローカルの環境も整えるという２重管理になってしまうところが悩ましいところ……
+#   ・bundle install --path vendor/bundleを行っておくこと
+# 
+# $ cp .github/hooks/pre-push .git/hooks/pre-push
+# $ chmod 755 .git/hooks/pre-push
+
+while read local_ref local_sha1 remote_ref remote_sha1
+do
+  for branch in "master" "development"; do
+    if [[ "${remote_ref##refs/heads/}" = "${branch}" ]]; then
+      bundle exec rubocop --require rubocop-rspec -D
+      rubocop=$?
+
+      bundle exec rails_best_practices
+      railsBestPractices=$?
+
+      RUBYOPT=-EUTF-8 bundle exec brakeman
+      brakeman=$?
+
+      exit $(($rubocop || $railsBestPractices || $brakeman))
+    fi
+  done
+done

@@ -248,6 +248,11 @@ workflows:
           requires:
             - lint
             - test
+          filters:
+            branches:
+              only:
+                - development
+                - master
       - approval-job:
           # approvalの仕様がよくわかんなかったがこの記事である程度理解した
           # https://qiita.com/wasnot/items/baeb5862da83e658da86
@@ -255,11 +260,6 @@ workflows:
           type: approval
           requires:
             - slack/approval-notification
-          filters:
-            branches:
-              only:
-                - development
-                - master
       - deploy-heroku-development:
           requires:
             - approval-job
