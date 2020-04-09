@@ -411,13 +411,28 @@ $ bin/rails dbconsole
 $ rails dbconsole
 ```
 
+### その他
 
+開発時のTipsを紹介します  
+やってもやらなくても良いです
 
+#### GitHooksのpre-pushを使用する
 
+[pre-push](https://githooks.com/)を使用してmaster、developmentブランチにpushする前に静的コード解析を実行してCIで落ちないようにします  
+CIの静的コード解析で落ちて修正するのは時間がかかるのでpush前に検知できた方が良いと思います  
+ローカルのgitを使用しているのでDockerで開発しているのにローカルの環境も整える必要があり２重管理になってしまうところが悩みどころです……
 
+pre-pushファイルを動作させるためにテンプレートファイルをコピーする
 
+```shell
+$ cp .github/hooks/pre-push .git/hooks/pre-push
+```
 
+pre-pushのファイルに実行権限ないとhookされないので実行権限を与えてやる
 
+```shell
+$ chmod 755 .git/hooks/pre-push
+```
 
 
 This README would normally document whatever steps are necessary to get the
