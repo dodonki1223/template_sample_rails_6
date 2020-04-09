@@ -401,8 +401,15 @@ $ bin/rails g --help
 $ rails g --help
 ```
 
+#### DBに接続する
 
+```shell
+# bin/ ありバージョン
+$ bin/rails dbconsole
 
+# bin/ なしバージョン
+$ rails dbconsole
+```
 
 
 
