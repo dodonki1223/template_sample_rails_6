@@ -114,7 +114,8 @@ services:
       - '3035:3035'
     environment:
       <<: *env
-      # webpacker.ymlの設定を上書き
+      # webpacker.ymlの設定を上書き、Webpack dev serverに「外部から」アクセスできる
+      # ようになります（デフォルトではlocalhostで実行されます）
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
 
   postgres:
