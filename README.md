@@ -12,16 +12,41 @@ Rails6アプリケーションの開発をすぐに始められるように素�
 
 ## 改修箇所
 
-- Docker化
-    - Redis、Sidekiqの導入
-- DBをPostgreSQLに変更
-- RSepcの導入
-    - factory_botの導入（テストデータ作成ツール）
-    - SimpleCovの導入（コードカバレッジ）
-- Rails ERDの導入（ER図自動生成ツール）
-- デバッグツールの導入（binding.pryを使用可能にする）
-- 静的コード解析ツールの導入（Rubocop、Rails Best Practices、Brakeman）
-- CircleCIによる自動テスト、静的コード解析、自動デプロイ（Heroku）
+自分が使いやすいようにいくつか改修しました
+
+### Docker化
+
+コマンド１つで開発ができるようにDocker化しました  
+Docker内ではよく使う [Redis](https://github.com/redis/redis-rb/)、[Sidekiq](https://github.com/mperham/sidekiq)が既に導入済みです  
+データベースは [PostgreSQL](https://www.postgresql.jp/document/12/html/) を使用します
+
+### RSpec
+
+デフォルトでは [Minitest](https://github.com/seattlerb/minitest) ですが [RSpec](https://github.com/rspec/rspec-rails) のほうが使い慣れているので [RSpec](https://github.com/rspec/rspec-rails) を導入しています  
+テストデータ作成ツールの [factory_bot](https://github.com/thoughtbot/factory_bot)、コードカバレッジを計測するツールの [SimpleCov](https://github.com/colszowka/simplecov) も導入済みです
+
+### ER図自動生成
+
+[Rails ERD](https://github.com/voormedia/rails-erd) を導入しているのでマイグレーションを実行した時、自動でER図が作成されるようになっています
+
+### デバッグツール
+
+システムを開発するためには効率よくデバッグできることで開発スピードは格段に上がるためRails開発ではおなじみの `binding.pry` を使用できる状態になっています
+
+### 静的コード解析ツール
+
+コードを一定の品質に保つために静的コード解析ツールを以下の３つが導入済みになっています
+
+- [Rubocop](https://github.com/rubocop-hq/rubocop)(Rubyの静的コードアナライザー及びコードフォーマッター)
+- [Rails Best Practices](https://github.com/flyerhzm/rails_best_practices)(Railsのベストプラクティスを教えてくれる)
+- [Brakeman](https://github.com/presidentbeef/brakeman)(セキュリティの脆弱性チェック)
+
+### CI（継続的インテグレーション）/CD（継続的デリバリー）環境 - Lint/Test/Deploy
+
+CircleCIにて自動テスト、静的コード解析、自動デプロイ（Heroku）を行うように設定ずみ
+
+### コードの状態
+
 - Railsガイドで紹介されている [rails generate scaffold HighScore game:string score:integer](https://railsguides.jp/command_line.html#rails-generate) を叩いた状態
 
 ## tempalte_sample_rails_6を動かす
