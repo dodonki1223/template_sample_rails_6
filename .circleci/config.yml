@@ -172,8 +172,10 @@ commands:
         enum: ["PRODUCTION", "DEVELOPMENT"]
     steps:
       - slack/status:
-          success_message: ':circleci-pass: Herokuの << parameters.environment >> 環境にデプロイが完了しました\n:github_octocat: User: $CIRCLE_USERNAME, Branch: $CIRCLE_BRANCH'
-          failure_message: ':circleci-fail: Herokuの << parameters.environment >> 環境にデプロイが失敗しました\n:github_octocat: User: $CIRCLE_USERNAME, Branch: $CIRCLE_BRANCH'
+          # NOTE:下記コマンドでHeroku APPのURLを無理やり作成している
+          #      $(heroku apps:info --app $HEROKU_APP_NAME_<< parameters.environment >> --shell | grep web_url | sed -e "s/web_url=//g")
+          success_message: ':circleci-pass: Herokuの << parameters.environment >> 環境にデプロイが完了しました \n :github_octocat: User: $CIRCLE_USERNAME, Branch: $CIRCLE_BRANCH \n :ok_hand: $(heroku apps:info --app $HEROKU_APP_NAME_<< parameters.environment >> --shell | grep web_url | sed -e "s/web_url=//g")'
+          failure_message: ':circleci-fail: Herokuの << parameters.environment >> 環境にデプロイが失敗しました \n :github_octocat: User: $CIRCLE_USERNAME, Branch: $CIRCLE_BRANCH'
 
 jobs:
   setup:
