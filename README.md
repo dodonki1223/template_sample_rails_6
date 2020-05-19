@@ -2,6 +2,9 @@
 
 [![CircleCI](https://circleci.com/gh/dodonki1223/template_sample_rails_6/tree/master.svg?style=svg)](https://circleci.com/gh/dodonki1223/template_sample_rails_6/tree/master)
 
+![00_template_sample_rails_6](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/readme/00_template_sample_rails_6.png)
+
+
 ## 概要
 
 Rails6アプリケーションの開発をすぐに始められるように素のRails6アプリケーションを元に自分流にカスタマイズしたものになります  
