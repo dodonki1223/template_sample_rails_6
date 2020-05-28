@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   slack: circleci/slack@3.4.2
   heroku: circleci/heroku@1.0.1
+  docker: circleci/docker@1.0.1
 executors:
   base:
     docker:
@@ -237,6 +238,12 @@ workflows:
     jobs:
       - setup
       - lint:
+          requires:
+            - setup
+      # 詳しくはドキュメントを確認
+      #   https://circleci.com/orbs/registry/orb/circleci/docker
+      - docker/hadolint:
+          dockerfiles: .dockerdev/Dockerfile
           requires:
             - setup
       - test:

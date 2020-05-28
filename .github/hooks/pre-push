@@ -22,7 +22,10 @@ do
       RUBYOPT=-EUTF-8 bundle exec brakeman
       brakeman=$?
 
-      exit $(($rubocop || $railsBestPractices || $brakeman))
+      hadolint .dockerdev/Dockerfile
+      hadolint=$?
+
+      exit $(($rubocop || $railsBestPractices || $brakeman || $hadolint))
     fi
   done
 done
