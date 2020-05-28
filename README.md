@@ -85,11 +85,12 @@ Docker内ではよく使う [Redis](https://github.com/redis/redis-rb/)、[Sidek
 
 ### 静的コード解析ツール
 
-コードを一定の品質に保つために静的コード解析ツールを以下の３つが導入済みになっています
+コードを一定の品質に保つために静的コード解析ツールを以下の４つが導入済みになっています
 
 - [Rubocop](https://github.com/rubocop-hq/rubocop)(Rubyの静的コードアナライザー及びコードフォーマッター)
 - [Rails Best Practices](https://github.com/flyerhzm/rails_best_practices)(Railsのベストプラクティスを教えてくれる)
 - [Brakeman](https://github.com/presidentbeef/brakeman)(セキュリティの脆弱性チェック)
+- [hadolint](https://github.com/hadolint/hadolint)(Dockerfileの静的コード解析)
 
 ### CI（継続的インテグレーション）/CD（継続的デリバリー）環境 - Lint/Test/Deploy
 
