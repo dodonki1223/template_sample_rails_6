@@ -254,6 +254,7 @@ workflows:
             - setup
       - slack/approval-notification:
           message: ':circleci-pass: $CIRCLE_BRANCH ブランチのデプロイ準備が整っています\n:github_octocat: User: $CIRCLE_USERNAME\nデプロイを実行する場合は *Approve* を押してください'
+          color: '#FFFF66'
           requires:
             - lint
             - test
