@@ -34,7 +34,7 @@ $ docker-compose up rails
 | ソフトウェアスタック | バージョン    |
 |:---------------------|:-------------:|
 | Rails                | 6.0.2.1以上   |
-| Ruby                 | 2.6.5         |
+| Ruby                 | 2.6.6         |
 | PostgreSQL           | 12            |
 | Node.js              | 12            |
 | Yarn                 | 12            |
@@ -131,7 +131,7 @@ Runnerはコマンドを実行するためのサービスになります
 rakeコマンドやRSpecを実行するために使用します
 
 ```shell
-$ docker-compose run runner
+$ docker-compose run --rm runner
 ```
 
 以下の説明は `docker-compose run runner` 実行後の説明になります
