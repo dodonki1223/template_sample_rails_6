@@ -34,7 +34,7 @@ $ docker-compose up rails
 | ソフトウェアスタック | バージョン    |
 |:---------------------|:-------------:|
 | Rails                | 6.0.2.1以上   |
-| Ruby                 | 2.6.5         |
+| Ruby                 | 2.6.6         |
 | PostgreSQL           | 12            |
 | Node.js              | 12            |
 | Yarn                 | 12            |
