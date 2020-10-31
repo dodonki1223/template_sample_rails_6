@@ -1,9 +1,10 @@
 version: 2.1
 orbs:
   ruby: circleci/ruby@1.1.2
+  node: circleci/node@4.1.0
   slack: circleci/slack@3.4.2
   heroku: circleci/heroku@1.0.1
-  docker: circleci/docker@1.0.1
+  docker: circleci/docker@1.5.0
 executors:
   base:
     docker:
@@ -30,29 +31,11 @@ executors:
     working_directory: ~/dodonki1223/template_sample_rails_6
 
 commands:
-  # Yarnのキャッシュ系コマンド
-  # https://circleci.com/docs/ja/2.0/caching/#yarn-node
-  restore-yarn-cache:
+  # Yarn系のパッケージのインストール関連のコマンド
+  install-yarn-packages:
     steps:
-      - restore_cache:
-          keys:
-            - yarn-packages-docker-sample-v2-{{ checksum "yarn.lock" }}
-            - yarn-packages-docker-sample-v2-
-  save-yarn-cache:
-    steps:
-      - save_cache:
-          key: yarn-packages-docker-sample-v2-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
-
-  # RSpecを実行するための設定系コマンド（主にフロントエンド部分）
-  test-client-settings:
-    steps:
-      - run:
-          name: RSpec Setup for webpacker
-          command: |
-            yarn install --check-files --cache-folder ~/.cache/yarn
-            NODE_ENV=production bin/rails webpacker:compile
+      - node/install-packages:
+          pkg-manager: yarn
 
   # テストDB設定関連のコマンド
   # https://circleci.com/docs/ja/2.0/postgres-config/
@@ -162,9 +145,7 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-      - restore-yarn-cache
-      - test-client-settings
-      - save-yarn-cache
+      - install-yarn-packages
       - test-db-settings
       - save-workspace
   lint:
