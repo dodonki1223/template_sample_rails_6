@@ -1,17 +1,25 @@
 version: 2.1
 orbs:
+  ruby: circleci/ruby@1.1.2
+  node: circleci/node@4.1.0
   slack: circleci/slack@3.4.2
   heroku: circleci/heroku@1.0.1
-  docker: circleci/docker@1.0.1
+  docker: circleci/docker@1.5.0
 executors:
   base:
     docker:
-      - image: circleci/ruby:2.6.5-node-browsers
+      - image: cimg/ruby:2.6.6-node
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
         environment:
           # Bundlerのパス設定が書き換えられ`vendor/bundle`ではなくて`/usr/local/bundle`を参照してしまい`bundle exec`でエラーになる
           # Bundlerのconfigファイル(pathの設定がされたもの)をworkspaceで永続化し`vendor/bundle`を参照するようにするための設定
           BUNDLE_APP_CONFIG: .bundle
       - image: circleci/postgres:12.0-alpine
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: test_sample_db
@@ -23,58 +31,11 @@ executors:
     working_directory: ~/dodonki1223/template_sample_rails_6
 
 commands:
-  # 依存関係のキャッシュを行うコマンド類
-  # 詳しくは https://circleci.com/docs/ja/2.0/caching/
-  # Bundlerのキャッシュ系コマンド
-  # https://circleci.com/docs/ja/2.0/caching/#bundler-ruby
-  restore-bundle-cache:
+  # Yarn系のパッケージのインストール関連のコマンド
+  install-yarn-packages:
     steps:
-      - restore_cache:
-          keys:
-            - v2-gem-cache-docker-sample-{{ checksum "Gemfile.lock" }}
-            - v2-gem-cache-docker-sample-
-  save-bundle-cache:
-    steps:
-      - save_cache:
-          key: v2-gem-cache-docker-sample-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-            - ~/.bundle
-  # Yarnのキャッシュ系コマンド
-  # https://circleci.com/docs/ja/2.0/caching/#yarn-node
-  restore-yarn-cache:
-    steps:
-      - restore_cache:
-          keys:
-            - yarn-packages-docker-sample-v2-{{ checksum "yarn.lock" }}
-            - yarn-packages-docker-sample-v2-
-  save-yarn-cache:
-    steps:
-      - save_cache:
-          key: yarn-packages-docker-sample-v2-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
-
-  # Bundlerのインストール系コマンド
-  install-bundler:
-    steps:
-      - run:
-          name: Install bundler(2.1.2)
-          command: gem install bundler:2.1.2
-  bundle-install:
-    steps:
-      - run:
-          name: Bundle install
-          command: bundle check --path=vendor/bundle || bundle install --jobs=4 --retry=3 --path vendor/bundle
-
-  # RSpecを実行するための設定系コマンド（主にフロントエンド部分）
-  test-client-settings:
-    steps:
-      - run:
-          name: RSpec Setup for webpacker
-          command: |
-            yarn install --check-files --cache-folder ~/.cache/yarn
-            NODE_ENV=production bin/rails webpacker:compile
+      - node/install-packages:
+          pkg-manager: yarn
 
   # テストDB設定関連のコマンド
   # https://circleci.com/docs/ja/2.0/postgres-config/
@@ -183,33 +144,28 @@ jobs:
     executor: base
     steps:
       - checkout
-      - restore-bundle-cache
-      - install-bundler
-      - bundle-install
-      - save-bundle-cache
-      - restore-yarn-cache
-      - test-client-settings
-      - save-yarn-cache
+      - ruby/install-deps
+      - install-yarn-packages
       - test-db-settings
       - save-workspace
   lint:
     executor: base
     steps:
       - using-workspace
-      - install-bundler
+      - ruby/install-deps
       - linter
   test:
     executor: base
     steps:
       - using-workspace
-      - install-bundler
+      - ruby/install-deps
       - testing
       - store-coverage
   document:
     executor: base
     steps:
       - using-workspace
-      - install-bundler
+      - ruby/install-deps
       - development-db-settings
       - generate-entity-relationship-diagrams
       - store-entity-relationship-diagrams
@@ -217,7 +173,7 @@ jobs:
     executor: base
     steps:
       - using-workspace
-      - install-bundler
+      - ruby/install-deps
       - deploy-heroku:
           environment: DEVELOPMENT
       - deploy-notification:
@@ -226,7 +182,7 @@ jobs:
     executor: base
     steps:
       - using-workspace
-      - install-bundler
+      - ruby/install-deps
       - deploy-heroku:
           environment: PRODUCTION
       - deploy-notification:

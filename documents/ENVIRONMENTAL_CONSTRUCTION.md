@@ -162,74 +162,89 @@ workflowの実行状態が確認できます
 
 ![09_environment_variables_settings](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/09_environment_variables_settings.png)
 
-環境変数は下記の4つの設定が必要です
+環境変数は下記の6つの設定が必要です
 
-| 環境変数名                  | 説明                              |
-|:----------------------------|:----------------------------------|
-| HEROKU_API_KEY              | HerokuのAPIキー                   |
-| HEROKU_APP_NAME_DEVELOPMENT | HerokuのDevelopment環境のアプリ名 |
-| HEROKU_APP_NAME_PRODUCTION  | HerokuのProduction環境のアプリ名  |
-| SLACK_WEBHOOK               | SlackのWebHookのURL               |
+| 環境変数名                  | 説明                                      |
+|:----------------------------|:------------------------------------------|
+| DOCKERHUB_PASSWORD          | Docker Hubのログイン ユーザーのパスワード |
+| DOCKERHUB_USER              | Docker Hubのログインユーザー              |
+| HEROKU_API_KEY              | HerokuのAPIキー                           |
+| HEROKU_APP_NAME_DEVELOPMENT | HerokuのDevelopment環境のアプリ名         |
+| HEROKU_APP_NAME_PRODUCTION  | HerokuのProduction環境のアプリ名          |
+| SLACK_WEBHOOK               | SlackのWebHookのURL                       |
+| SLACK_WEBHOOK               | SlackのWebHookのURL                       |
+
+**DOCKERHUB_PASSWORD**
+
+Docker Hub へログインできるユーザーのパスワードです
+
+![10_docker_hub_password.png](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/10_docker_hub_password.png)
+
+**DOCKERHUB_USER**
+
+Docker Hub へログインできるユーザーのユーザー名です
+
+![11_docker_hub_user.png](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/11_docker_hub_user.png)
 
 **HEROKU_API_KEY**
 
 [https://dashboard.heroku.com/account](https://dashboard.heroku.com/account) にアクセスしAPI Keyの `Reveal` をクリックしてAPI KeyをコピーしてCircleCIに設定してください
 
-![10_heroku_api_key](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/10_heroku_api_key.png)
+![12_heroku_api_key](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/12_heroku_api_key.png)
 
-![11_heroku_api_key_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/11_heroku_api_key_setting.png)
+![13_heroku_api_key_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/13_heroku_api_key_setting.png)
 
 **HEROKU_APP_NAME_DEVELOPMENT、HEROKU_APP_NAME_PRODUCTION**
 
 [https://dashboard.heroku.com/apps](https://dashboard.heroku.com/apps) にアクセスして Development環境とProduction環境のアプリ名をコピーして設定してください
 
-![12_heroku_apps_list](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/12_heroku_apps_list.png)
+![14_heroku_apps_list](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/14_heroku_apps_list.png)
 
-![13_heroku_app_name_development_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/13_heroku_app_name_development_setting.png)
+![15_heroku_app_name_development_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/15_heroku_app_name_development_setting.png)
 
-![14_heroku_app_name_production_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/14_heroku_app_name_production_setting.png)
+![16_heroku_app_name_production_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/16_heroku_app_name_production_setting.png)
 
 **SLACK_WEBHOOK**
 
 `Incoming Webhook` のページにアクセスし `設定を編集` をクリックします
 
-![15_incoming_webhook](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/15_incoming_webhook.png)
+![17_incoming_webhook](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/17_incoming_webhook.png)
 
 編集画面の `Webhook URL` の `URLをコピーする` をクリックし環境変数に設定します
 
-![16_slack_webhook_url](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/16_slack_webhook_url.png)
+![18_slack_webhook_url](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/18_slack_webhook_url.png)
 
-![17_slack_webhook_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/17_slack_webhook_setting.png)
+![19_slack_webhook_setting](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/19_slack_webhook_setting.png)
 
 以下のようになっていればOKです
 
-![18_complete_environment_variables](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/18_complete_environment_variables.png)
+![20_complete_environment_variables](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/20_complete_environment_variables.png)
 
 ### 再度実行して正しく動作することを確認する
 
 [https://app.circleci.com/pipelines/github/GitHubのアカウント名/リポジトリ名](https://app.circleci.com/pipelines/github/GitHubのアカウント名/リポジトリ名) にアクセスします  
 失敗したWorkflowをクリックします
 
-![19_select_failed_workflow](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/19_select_failed_workflow.png)
+![21_select_failed_workflow](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/21_select_failed_workflow.png)
 
 `Rerun Workflow from Failed` をクリックして失敗した箇所から再度実行します
 
-![20_rerun_workflow_from_failed](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/20_rerun_workflow_from_failed.png)
+![22_rerun_workflow_from_failed](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/22_rerun_workflow_from_failed.png)
 
 再度実行するとSlackにApprove通知が来るので `Visit Workflow` をクリックします
 
-![21_notify_approve_for_slack](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/21_notify_approve_for_slack.png)
+![23_notify_approve_for_slack](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/23_notify_approve_for_slack.png)
 
 Workflowへ飛ぶので 停止中の `approval-job` をクリックします  
 もし処理を続行させたくない場合は `Rerun` のところから `Cancel Workflow` をクリックすることで処理を終了させることができます
 
-![22_click_approve_job](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/22_click_approve_job.png)
+![24_click_approve_job](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/24_click_approve_job.png)
 
 `Approve` をクリックし処理を続行させます
 
-![23_approve_job](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/23_approve_job.png)
+![25_approve_job](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/25_approve_job.png)
 
 デプロイが完了するとSlackにデプロイ完了通知が来ます  
 これで自動デプロイ完了です
 
-![24_deploy_complete](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/24_deploy_complete.png)
+![26_deploy_complete](https://raw.githubusercontent.com/dodonki1223/image_garage/master/template_sample_rails6/circleci/26_deploy_complete.png)
