@@ -7,11 +7,17 @@ executors:
   base:
     docker:
       - image: circleci/ruby:2.6.5-node-browsers
+        auth:
+          username: dodonki1223
+          password: $DOCKERHUB_PASSWORD
         environment:
           # Bundlerのパス設定が書き換えられ`vendor/bundle`ではなくて`/usr/local/bundle`を参照してしまい`bundle exec`でエラーになる
           # Bundlerのconfigファイル(pathの設定がされたもの)をworkspaceで永続化し`vendor/bundle`を参照するようにするための設定
           BUNDLE_APP_CONFIG: .bundle
       - image: circleci/postgres:12.0-alpine
+        auth:
+          username: dodonki1223
+          password: $DOCKERHUB_PASSWORD
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: test_sample_db
