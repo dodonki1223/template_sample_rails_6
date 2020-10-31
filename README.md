@@ -131,7 +131,7 @@ Runnerはコマンドを実行するためのサービスになります
 rakeコマンドやRSpecを実行するために使用します
 
 ```shell
-$ docker-compose run runner
+$ docker-compose run --rm runner
 ```
 
 以下の説明は `docker-compose run runner` 実行後の説明になります
