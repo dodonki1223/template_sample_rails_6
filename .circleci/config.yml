@@ -10,7 +10,7 @@ executors:
     docker:
       - image: cimg/ruby:2.6.6-node
         auth:
-          username: dodonki1223
+          username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
         environment:
           # Bundlerのパス設定が書き換えられ`vendor/bundle`ではなくて`/usr/local/bundle`を参照してしまい`bundle exec`でエラーになる
@@ -18,7 +18,7 @@ executors:
           BUNDLE_APP_CONFIG: .bundle
       - image: circleci/postgres:12.0-alpine
         auth:
-          username: dodonki1223
+          username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
         environment:
           POSTGRES_USER: root
