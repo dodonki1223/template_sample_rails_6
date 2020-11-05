@@ -31,12 +31,6 @@ executors:
     working_directory: ~/dodonki1223/template_sample_rails_6
 
 commands:
-  # Yarn系のパッケージのインストール関連のコマンド
-  install-yarn-packages:
-    steps:
-      - node/install-packages:
-          pkg-manager: yarn
-
   # テストDB設定関連のコマンド
   # https://circleci.com/docs/ja/2.0/postgres-config/
   test-db-settings:
@@ -145,7 +139,8 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-      - install-yarn-packages
+      - node/install-packages:
+          pkg-manager: yarn
       - test-db-settings
       - save-workspace
   lint:
