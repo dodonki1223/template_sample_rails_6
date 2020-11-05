@@ -41,6 +41,7 @@ group :development, :test do
   # Test tool
   # https://github.com/rspec/rspec-rails/issues/2177#issuecomment-552247649
   gem 'rspec-rails', '4.0.0.beta3'
+  gem "rspec_junit_formatter"
   # Generate db datas for test
   gem 'factory_bot_rails'
   # Debug tool

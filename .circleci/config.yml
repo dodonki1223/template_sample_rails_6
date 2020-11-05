@@ -31,12 +31,6 @@ executors:
     working_directory: ~/dodonki1223/template_sample_rails_6
 
 commands:
-  # Yarn系のパッケージのインストール関連のコマンド
-  install-yarn-packages:
-    steps:
-      - node/install-packages:
-          pkg-manager: yarn
-
   # テストDB設定関連のコマンド
   # https://circleci.com/docs/ja/2.0/postgres-config/
   test-db-settings:
@@ -63,22 +57,14 @@ commands:
   # Linter関連のコマンド
   linter:
     steps:
-      - run:
-          name: Rubocop
-          command: bundle exec rubocop --require rubocop-rspec -D -P
+      - ruby/rubocop-check:
+          label: Rubocop
       - run:
           name: Rails Best Practices
           command: bundle exec rails_best_practices .
       - run:
           name: Brakeman
           command: bundle exec brakeman
-
-  # テスト関連コマンド
-  testing:
-    steps:
-      - run:
-          name: Run all RSpec
-          command: bundle exec rspec --format progress
 
   # テストカバレッジ関連のコマンド
   # https://circleci.com/docs/2.0/code-coverage/#ruby
@@ -145,7 +131,8 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-      - install-yarn-packages
+      - node/install-packages:
+          pkg-manager: yarn
       - test-db-settings
       - save-workspace
   lint:
@@ -159,7 +146,8 @@ jobs:
     steps:
       - using-workspace
       - ruby/install-deps
-      - testing
+      - ruby/rspec-test:
+          label: Run all RSpec
       - store-coverage
   document:
     executor: base
