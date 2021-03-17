@@ -31,7 +31,7 @@ executors:
     working_directory: ~/dodonki1223/template_sample_rails_6
 
 commands:
-  # テストDB設定関連のコマンド
+  # テスト設定関連のコマンド
   # https://circleci.com/docs/ja/2.0/postgres-config/
   test-db-settings:
     steps:
@@ -40,6 +40,35 @@ commands:
           command: |
             cp config/{database_circleci,database}.yml
             bin/rails db:schema:load --trace
+  test-client-settings:
+    steps:
+      - run:
+          name: create assets precompile cache key
+          command: |
+            # プリコンパイル対象のファイルの最新コミット番号をキーにする
+            git rev-parse $(git log --oneline -n 1 app/assets app/javascript lib/assets vendor/assets Gemfile.lock | awk '{{print $1}}') > VERSION
+      - restore_cache:
+          keys:
+            # 同じバーションからキャッシュを復帰。無ければ、直近のキャッシュを復帰。
+            - assets-precompile-v1-cache-{{ checksum "VERSION" }}
+            - assets-precompile-v1-cache-
+      - run:
+          name: Rspec Setup for webpacker
+          command: |
+            current_revision=VERSION
+            previous_revision=public/packs-test/VERSION
+            # プリコンパイル対象のファイルが変更されていなければスキップ
+            if [ ! -e $previous_revision ] || ! diff $previous_revision $current_revision; then
+              NODE_ENV=production bin/rails webpacker:compile
+              cp -f $current_revision $previous_revision
+            else
+              echo "Skipped."
+            fi
+      - save_cache:
+          key: assets-precompile-v1-cache-{{ checksum "VERSION" }}
+          paths:
+            # プリコンパイル結果の保存先を指定
+            - public/packs-test
 
   # ワークスペース関連のコマンド
   save-workspace:
@@ -76,13 +105,6 @@ commands:
           destination: coverage-results
 
   # ドキュメント関連コマンド
-  development-db-settings:
-    steps:
-      - run:
-          name: Create development database
-          command: |
-            cp config/{database_circleci,database}.yml
-            RAILS_ENV=development bin/rails db:schema:load --trace
   generate-entity-relationship-diagrams:
     steps:
       - run:
@@ -98,6 +120,13 @@ commands:
       - store_artifacts:
           path: db/erd/template_sample_rials6_db.png
           destination: db/erd/template_sample_rials6_db.png
+  development-db-settings:
+    steps:
+      - run:
+          name: Create development database
+          command: |
+            cp config/{database_circleci,database}.yml
+            RAILS_ENV=development bin/rails db:schema:load --trace
 
   # デプロイ関連コマンド
   deploy-heroku:
@@ -134,6 +163,7 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - test-db-settings
+      - test-client-settings
       - save-workspace
   lint:
     executor: base
