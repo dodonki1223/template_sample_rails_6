@@ -1,7 +1,7 @@
 version: "3.7"
 
 # 共通化のための機能でプレフィックスとして"x-"をつける
-# https://docs.docker.com/compose/compose-file/#extension-fields
+# https://github.com/compose-spec/compose-spec/blob/master/spec.md#fragments
 # Dockerfileで定義したアプリケーションコンテナの構築で必要な情報を提供する
 x-app: &app
   build:
