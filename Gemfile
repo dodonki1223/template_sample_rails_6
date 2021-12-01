@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.2', '>= 6.0.2.1'
+gem 'rails', '~> 6.1.3.1'
 # Use PostgresSQL as the database for Active Record
 gem 'pg', '~> 1.2.2'
 # Use Puma as the app server
@@ -40,7 +40,7 @@ group :development, :test do
   gem "rails_best_practices", require: false
   # Test tool
   # https://github.com/rspec/rspec-rails/issues/2177#issuecomment-552247649
-  gem 'rspec-rails', '4.0.0.beta3'
+  gem 'rspec-rails', '4.0.2'
   gem "rspec_junit_formatter"
   # Generate db datas for test
   gem 'factory_bot_rails'

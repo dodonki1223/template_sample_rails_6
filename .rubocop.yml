@@ -8,6 +8,7 @@ Rails:
   Enabled: true
 
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.6.6
   Exclude:
     - bin/bundle
