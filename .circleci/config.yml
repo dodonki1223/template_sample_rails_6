@@ -173,6 +173,7 @@ jobs:
       - linter
   test:
     executor: base
+    parallelism: 2
     steps:
       - using-workspace
       - ruby/install-deps
