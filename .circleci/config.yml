@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@1.1.2
   node: circleci/node@4.1.0
-  slack: circleci/slack@3.4.2
+  slack: circleci/slack@4.5.1
   heroku: circleci/heroku@1.0.1
   docker: circleci/docker@1.5.0
 
@@ -150,11 +150,103 @@ commands:
         type: enum
         enum: ["PRODUCTION", "DEVELOPMENT"]
     steps:
-      - slack/status:
-          # NOTE:下記コマンドでHeroku APPのURLを無理やり作成している
-          #      $(heroku apps:info --app $HEROKU_APP_NAME_<< parameters.environment >> --shell | grep web_url | sed -e "s/web_url=//g")
-          success_message: ':circleci-pass: Herokuの << parameters.environment >> 環境にデプロイが完了しました \n :github_octocat: User: $CIRCLE_USERNAME, Branch: $CIRCLE_BRANCH \n :ok_hand: $(heroku apps:info --app $HEROKU_APP_NAME_<< parameters.environment >> --shell | grep web_url | sed -e "s/web_url=//g")'
-          failure_message: ':circleci-fail: Herokuの << parameters.environment >> 環境にデプロイが失敗しました \n :github_octocat: User: $CIRCLE_USERNAME, Branch: $CIRCLE_BRANCH'
+      - run:
+          name: get heroku url
+          command: HEROKU_URL=$(heroku apps:info --app $HEROKU_APP_NAME_<< parameters.environment >> --shell | grep web_url | sed -e "s/web_url=//g")
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "<< parameters.environment >> environment Job Failed. :red_circle:",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project*:\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch*:\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author*:\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "<< parameters.environment >> - Deployment Successful! :tada:",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project*:\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author*:\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Heroku deploy url"
+                      },
+                      "url": "$(heroku apps:info --app $HEROKU_APP_NAME_<< parameters.environment >> --shell | grep web_url | sed -e 's/web_url=//g')"
+                    }
+                  ]
+                }
+              ]
+            }
 
 jobs:
   setup:
@@ -203,9 +295,9 @@ jobs:
     executor: base
     steps:
       - using-workspace
-      - ruby/install-deps
-      - deploy-heroku:
-          environment: PRODUCTION
+      # - ruby/install-deps
+      # - deploy-heroku:
+      #     environment: PRODUCTION
       - deploy-notification:
           environment: PRODUCTION
 
@@ -229,33 +321,75 @@ workflows:
       - document:
           requires:
             - setup
-      - slack/approval-notification:
-          message: ':circleci-pass: $CIRCLE_BRANCH ブランチのデプロイ準備が整っています\n:github_octocat: User: $CIRCLE_USERNAME\nデプロイを実行する場合は *Approve* を押してください'
-          color: '#FFFF66'
+      - slack/on-hold:
+          name: slack_on_hold
+          context: slack
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "ON HOLD - Awaiting Approval :raised_hand:",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project*:\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch*:\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author*:\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Workflow"
+                      },
+                      "url": "https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}"
+                    }
+                  ]
+                }
+              ]
+            }
           requires:
             - lint
             - test
           filters:
             branches:
               only:
-                - development
                 - master
-      - approval-job:
-          # approvalの仕様がよくわかんなかったがこの記事である程度理解した
-          # https://qiita.com/wasnot/items/baeb5862da83e658da86
-          # https://circleci.com/docs/2.0/workflows/#holding-a-workflow-for-a-manual-approval
+      - pause_workflow:
+          requires:
+            - slack_on_hold
           type: approval
-          requires:
-            - slack/approval-notification
       - deploy-heroku-development:
+          context: slack
           requires:
-            - approval-job
+            - lint
+            - test
           filters:
             branches:
               only: development
       - deploy-heroku-production:
+          context: slack
           requires:
-            - approval-job
+            - pause_workflow
           filters:
             branches:
               only: master
