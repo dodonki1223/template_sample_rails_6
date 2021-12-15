@@ -1,10 +1,12 @@
 version: 2.1
+
 orbs:
   ruby: circleci/ruby@1.1.2
   node: circleci/node@4.1.0
   slack: circleci/slack@3.4.2
   heroku: circleci/heroku@1.0.1
   docker: circleci/docker@1.5.0
+
 executors:
   base:
     docker:
@@ -25,9 +27,9 @@ executors:
           POSTGRES_DB: test_sample_db
           POSTGRES_PASSWORD: ""
     environment:
-      - RAILS_ENV: test
-      - PGHOST: 127.0.0.1
-      - PGUSER: root
+      RAILS_ENV: test
+      PGHOST: 127.0.0.1
+      PGUSER: root
     working_directory: ~/dodonki1223/template_sample_rails_6
 
 commands:
