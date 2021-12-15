@@ -295,9 +295,9 @@ jobs:
     executor: base
     steps:
       - using-workspace
-      # - ruby/install-deps
-      # - deploy-heroku:
-      #     environment: PRODUCTION
+      - ruby/install-deps
+      - deploy-heroku:
+          environment: PRODUCTION
       - deploy-notification:
           environment: PRODUCTION
 
