@@ -36,8 +36,8 @@ $ docker-compose up rails
 | Rails                | 6.0.2.1以上   |
 | Ruby                 | 2.6.6         |
 | PostgreSQL           | 12            |
-| Node.js              | 12            |
-| Yarn                 | 12            |
+| Node.js              | 12.16.3       |
+| Yarn                 | 1.22.10       |
 | Bundler              | 2.1.2         |
 | Redis                | 5.0           |
 
